@@ -16,7 +16,6 @@
         ),
     
     
-    
        2. CGridView (view file):
     
         $this->widget('zii.widgets.grid.CGridView', array(  
@@ -29,7 +28,6 @@
                 ...
             ),
         ));
-    
     
     
        3. If you need a filter for translatable fields, edit the search method:
