@@ -1,5 +1,7 @@
 <?php
-/* Multilanguage Behavior
+/* 
+      Multilanguage Behavior
+      
       Usage
       1. Add to the Post model:
     
