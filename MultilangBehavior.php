@@ -1,57 +1,55 @@
 <?php
-    // Multilanguage Behavior
-    // Usage
-    //   1. Add to the Post model:
-    //
-    //      public function behaviors(){
-    //          return array(
-    //              'multilang' => array(
-    //              'class' => 'ext.behaviors.multilang.MultilangBehavior',
-    //              'translationClass' => 'PostLang',
-    //              'defaultLanguage' => $defaultLanguage,
-    //              'languages' => $langs,
-    //              // Поля вспомогательной таблицы, хранящие переводы
-    //              'attributes' => array('title', 'text'),
-    //          ),
-    //      ),
-    //
-    //
-    //
-    //   2. CGridView (view file):
-    //
-    //      $this->widget('zii.widgets.grid.CGridView', array(  
-    //	        'id'=>'post-grid',
-    //	        'dataProvider'=>$model->search(),
-    //          'columns'=>array(
-    //                ...
-    //	            'title',
-    //              'text'
-    //                ...
-    //	        ),
-    //      ));
-    //
-    //
-    //
-    //   3. If you need a filter for translatable fields, edit the search method:
-    //
-    //    public function search()
-    //    {
-    //        $criteria=new CDbCriteria;
-    //
-    //        // Need to add table alias 't.'
-    //        $criteria->compare('t.id',$this->id);
-    //        ...
-    //
-    //        // Modify the search criteria. Добавляет возможность фильтрации по переводимым атрибутам
-    //        $criteria = $this->multilang->modifySearchCriteria($criteria);
-    //
-    //        return new CActiveDataProvider($this, array(
-    //            'criteria'=>$criteria,
-    //        ));
-    //    }
-    //
-    //
-    //
+/* Multilanguage Behavior
+      Usage
+       1. Add to the Post model:
+    
+        public function behaviors(){
+          return array(
+              'multilang' => array(
+              'class' => 'ext.behaviors.multilang.MultilangBehavior',
+              'translationClass' => 'PostLang',
+              'defaultLanguage' => $defaultLanguage,
+              'languages' => $langs,
+              // Поля вспомогательной таблицы, хранящие переводы
+              'attributes' => array('title', 'text'),
+          ),
+        ),
+    
+    
+    
+       2. CGridView (view file):
+    
+        $this->widget('zii.widgets.grid.CGridView', array(  
+            'id'=>'post-grid',
+            'dataProvider'=>$model->search(),
+            'columns'=>array(
+                ...
+                'title',
+              'text'
+                ...
+            ),
+        ));
+    
+    
+    
+       3. If you need a filter for translatable fields, edit the search method:
+    
+        public function search()
+        {
+            $criteria=new CDbCriteria;
+        
+            // Need to add table alias 't.'
+            $criteria->compare('t.id',$this->id);
+            ...
+        
+            // Modify the search criteria. Добавляет возможность фильтрации по переводимым атрибутам
+            $criteria = $this->multilang->modifySearchCriteria($criteria);
+        
+            return new CActiveDataProvider($this, array(
+                'criteria'=>$criteria,
+            ));
+        }
+*/
 
     class MultilangBehavior extends CActiveRecordBehavior
     {
