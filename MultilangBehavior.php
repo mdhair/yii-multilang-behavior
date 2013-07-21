@@ -10,8 +10,8 @@
                         'multilang' => array(
                               'class' => 'ext.behaviors.multilang.MultilangBehavior',
                               'translationClass' => 'PostLang',
-                              'defaultLanguage' => $defaultLanguage,
-                              'languages' => $langs,
+                              'defaultLanguage' => 'uk',
+                              'languages' => array(en, fr, ru, uk),
                               // Поля вспомогательной таблицы, хранящие переводы
                               'attributes' => array('title', 'text'),
                         ),
@@ -75,7 +75,7 @@
             $attributes = array();
             foreach ($this->languages as $lang) {
                 foreach ($this->attributes as $attribute) {
-                    $attributes[] = $attribute.'_'.$lang['code'];
+                    $attributes[] = $attribute.'_'.$lang;
                 }
             }
 
@@ -95,13 +95,12 @@
         {
             /* @var $owner CActiveRecord */
             $owner = $this->getOwner();
-            $lang = $this->getLangIdFromCode($this->currentLanguage);
 
             $criteria->mergeWith(array(
                 'with' => array(
                     'contents' => array(
                         'condition' => 'contents.lang_id = :lang',
-                        'params' => array(':lang' => $lang),
+                        'params' => array(':lang' => $this->currentLanguage),
                         'together' => true
                     )
                 )
@@ -128,18 +127,17 @@
             foreach ($this->languages as $lang) {
                 foreach ($this->attributes as $attribute) {
                     foreach ($owner->contents as $content) {
-
-                        if ($content->lang_id == $lang['id']) {
-                            $this->{$attribute.'_'.$lang['code']} = $content->{$attribute};
+                        if ($content->lang_id == $lang) {
+                            $this->{$attribute.'_'.$lang} = $content->{$attribute};
                         }
 
-                        if ($this->getLangCodeFromId($content->lang_id) == Yii::app()->language) {
+                        if ($content->lang_id == $this->currentLanguage) {
                             $this->{$attribute} = $content->{$attribute};
                         }
                     }
 
-                    if (!isset($this->{$attribute.'_'.$lang['code']})) {
-                        $this->{$attribute.'_'.$lang['code']} = '';
+                    if (!isset($this->{$attribute.'_'.$lang})) {
+                        $this->{$attribute.'_'.$lang} = '';
                     }
                 }
             }
@@ -162,16 +160,16 @@
             }
 
             foreach ($this->languages as $lang) {
-                if (!isset($translations[$lang['id']])) {
+                if (!isset($translations[$lang])) {
                     $model = new $this->translationClass;
                     $model->owner_id = $ownerPk;
-                    $model->lang_id = $lang['id'];
+                    $model->lang_id = $lang;
                 } else {
-                    $model = $translations[$lang['id']];
+                    $model = $translations[$lang];
                 }
 
                 foreach ($this->attributes as $attribute) {
-                    $model->{$attribute} = $_POST[$ownerClassName][$attribute.'_'.$lang['code']];
+                    $model->{$attribute} = $_POST[$ownerClassName][$attribute.'_'.$lang];
                 }
                 /* @var $model CActiveRecord */
                 $model->save(false);
@@ -211,24 +209,6 @@
         public function canSetProperty($name)
         {
             return true;
-        }
-
-        private function getLangIdFromCode($code){
-            foreach ($this->languages as $lang) {
-                if ($lang['code'] == $code) {
-                    return $lang['id'];
-                }
-            }
-            return null;
-        }
-
-        private function getLangCodeFromId($id){
-            foreach ($this->languages as $lang) {
-                if ($lang['id'] == $id) {
-                    return $lang['code'];
-                }
-            }
-            return null;
         }
 
     }
